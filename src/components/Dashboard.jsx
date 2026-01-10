@@ -27,7 +27,7 @@ export default function Dashboard({ progress, domainStats, badges, roadmap, flas
       inProgress: domainInProgress,
       notStarted: domainNotStarted
     };
-  }); // Removed filter - show all domains
+  });
 
   // Custom tooltip for pie chart - clean and simple
   const CustomPieTooltip = ({ active, payload }) => {
@@ -48,34 +48,35 @@ export default function Dashboard({ progress, domainStats, badges, roadmap, flas
   };
 
   // Custom tooltip for bar chart
-  const CustomBarTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700">
-          <p className="font-bold text-gray-900 dark:text-white mb-2">{data.domain}</p>
-          <div className="space-y-1 text-sm">
-            <p className="text-gray-600 dark:text-gray-400">
-              <span className="font-semibold text-indigo-600 dark:text-indigo-400">{data.percent}%</span> Mastery
-            </p>
-            <p className="text-gray-600 dark:text-gray-400">
-              Total: <span className="font-semibold">{data.total}</span> topics
-            </p>
-            <p className="text-green-600 dark:text-green-400">
-              Mastered: <span className="font-semibold">{data.mastered}</span>
-            </p>
-            <p className="text-yellow-600 dark:text-yellow-400">
-              In Progress: <span className="font-semibold">{data.inProgress}</span>
-            </p>
-            <p className="text-gray-500 dark:text-gray-500">
-              Not Started: <span className="font-semibold">{data.notStarted}</span>
-            </p>
-          </div>
+  // Custom tooltip for bar chart
+const CustomBarTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-gray-800 dark:bg-gray-900 p-3 rounded-lg shadow-xl border border-gray-700">
+        <p className="font-bold text-white mb-2">{data.domain}</p>
+        <div className="space-y-1 text-sm">
+          <p className="text-gray-300">
+            <span className="font-semibold text-indigo-400">{data.percent}%</span> Mastery
+          </p>
+          <p className="text-gray-300">
+            Total: <span className="font-semibold text-white">{data.total}</span> topics
+          </p>
+          <p className="text-green-400">
+            Mastered: <span className="font-semibold">{data.mastered}</span>
+          </p>
+          <p className="text-yellow-400">
+            In Progress: <span className="font-semibold">{data.inProgress}</span>
+          </p>
+          <p className="text-gray-400">
+            Not Started: <span className="font-semibold">{data.notStarted}</span>
+          </p>
         </div>
-      );
-    }
-    return null;
-  };
+      </div>
+    );
+  }
+  return null;
+};
 
   return (
     <section className="w-full space-y-6">
@@ -185,64 +186,78 @@ export default function Dashboard({ progress, domainStats, badges, roadmap, flas
             </PieChart>
           </ResponsiveContainer>
         </div>
-
-        {/* Enhanced Bar Chart */}
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">Domain Mastery</h2>
-          <ResponsiveContainer width="100%" height={380}>
-            <BarChart 
-              data={enhancedDomainStats} 
-              layout="vertical" 
-              margin={{ top: 10, right: 50, left: 20, bottom: 10 }}
+{/* Enhanced Bar Chart */}
+{/* Enhanced Bar Chart - Custom HTML/CSS */}
+<div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl shadow-lg">
+  <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">Domain Mastery</h2>
+  
+  <div className="space-y-4">
+    {enhancedDomainStats.map((domain) => (
+      <div key={domain.domain} className="group">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{domain.domain}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Total: {domain.total} topics
+          </span>
+        </div>
+        
+        <div className="flex h-8 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+          {domain.mastered > 0 && (
+            <div 
+              className="bg-green-500 flex items-center justify-center text-xs font-semibold text-white transition-all duration-500 hover:opacity-80"
+              style={{ width: `${(domain.mastered / domain.total) * 100}%` }}
+              title={`Mastered: ${domain.mastered}`}
             >
-              <XAxis 
-                type="number" 
-                stroke="#9ca3af" 
-                fontSize={13}
-                domain={[0, 100]}
-                tickFormatter={(value) => `${value}%`}
-                tick={{ fill: '#6b7280' }}
-              />
-              <YAxis 
-                dataKey="domain" 
-                type="category" 
-                stroke="#9ca3af" 
-                fontSize={13}
-                width={120}
-                tick={{ fill: '#6b7280' }}
-              />
-              <Tooltip content={<CustomBarTooltip />} />
-              <Bar 
-                dataKey="percent" 
-                fill="#6366f1" 
-                radius={[0, 8, 8, 0]}
-                animationBegin={0}
-                animationDuration={600}
-              >
-                {enhancedDomainStats.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={
-                      entry.percent === 100 ? '#10B981' : 
-                      entry.percent >= 75 ? '#6366f1' : 
-                      entry.percent >= 50 ? '#8b5cf6' : 
-                      entry.percent >= 25 ? '#F59E0B' : 
-                      '#E5E7EB'
-                    }
-                  />
-                ))}
-                <LabelList 
-                  dataKey="percent" 
-                  position="right" 
-                  formatter={(value) => `${value}%`}
-                  style={{ fill: '#4b5563', fontSize: '13px', fontWeight: '600' }}
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+              {domain.mastered > 0 && <span className="px-2">{domain.mastered}</span>}
+            </div>
+          )}
+          
+          {domain.inProgress > 0 && (
+            <div 
+              className="bg-yellow-500 flex items-center justify-center text-xs font-semibold text-white transition-all duration-500 hover:opacity-80"
+              style={{ width: `${(domain.inProgress / domain.total) * 100}%` }}
+              title={`In Progress: ${domain.inProgress}`}
+            >
+              {domain.inProgress > 0 && <span className="px-2">{domain.inProgress}</span>}
+            </div>
+          )}
+          
+          {domain.notStarted > 0 && (
+            <div 
+              className="bg-gray-500 flex items-center justify-center text-xs font-semibold text-white transition-all duration-500 hover:opacity-80"
+              style={{ width: `${(domain.notStarted / domain.total) * 100}%` }}
+              title={`Not Started: ${domain.notStarted}`}
+            >
+              {domain.notStarted > 0 && <span className="px-2">{domain.notStarted}</span>}
+            </div>
+          )}
+        </div>
+        
+        <div className="flex gap-4 mt-1 text-xs">
+          <span className="text-green-600 dark:text-green-400">✓ {domain.mastered} Mastered</span>
+          <span className="text-yellow-600 dark:text-yellow-400">⟳ {domain.inProgress} In Progress</span>
+          <span className="text-gray-500 dark:text-gray-400">○ {domain.notStarted} Not Started</span>
         </div>
       </div>
-
+    ))}
+  </div>
+  
+  <div className="flex justify-center gap-6 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+    <div className="flex items-center gap-2">
+      <div className="w-3 h-3 bg-green-500 rounded"></div>
+      <span className="text-xs text-gray-600 dark:text-gray-400">Mastered</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+      <span className="text-xs text-gray-600 dark:text-gray-400">In Progress</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <div className="w-3 h-3 bg-gray-500 rounded"></div>
+      <span className="text-xs text-gray-600 dark:text-gray-400">Not Started</span>
+    </div>
+  </div>
+</div>
+</div>
       {/* Domain Details Grid - Show ALL domains */}
       {enhancedDomainStats.length > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">
