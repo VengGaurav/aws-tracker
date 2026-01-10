@@ -40,15 +40,14 @@ export default function Flashcards({ flashcards, setFlashcards }) {
           <div className="flex w-full max-w-xl items-center justify-end gap-2 mb-1">
             <button title="Edit" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300" onClick={() => setEditIdx(idx)}><Pencil className="w-5 h-5" /></button>
           </div>
-          <div
-            className={`w-full max-w-xl h-40 sm:h-48 md:h-56 flex items-center justify-center bg-indigo-600 dark:bg-indigo-800 rounded-xl shadow-lg text-lg sm:text-xl md:text-2xl font-semibold cursor-pointer transition-transform text-white p-4 sm:p-6 ${flipped ? 'bg-indigo-700 dark:bg-indigo-900' : ''}`}
-            style={{ perspective: "1000px" }}
-            onClick={()=>setFlipped(f=>!f)}
+          <div className={`w-full max-w-xl flex items-start justify-center bg-indigo-600 dark:bg-indigo-800 rounded-xl shadow-lg text-base sm:text-lg md:text-xl font-semibold cursor-pointer transition-transform text-white p-4 sm:p-6 ${flipped ? 'bg-indigo-700 dark:bg-indigo-900' : ''}`}
+          style={{ perspective: "1000px", minHeight: "160px" }}
+          onClick={()=>setFlipped(f=>!f)}
           >
-            <div className="w-full h-full flex items-center justify-center text-center select-none break-words">
-              {flipped ? flashcards[idx].answer : flashcards[idx].question}
-            </div>
-          </div>
+        <div className="w-full text-left select-none whitespace-pre-wrap break-words">
+           {flipped ? flashcards[idx].answer : flashcards[idx].question}
+        </div>
+        </div>
           <div className="flex gap-3 sm:gap-4 justify-center mt-2 items-center">
             <button className="bg-indigo-700 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 rounded-lg px-3 sm:px-4 py-1 sm:py-2 text-white text-sm sm:text-base" onClick={prev} type="button">Prev</button>
             <span className="text-indigo-700 dark:text-indigo-300 font-mono text-sm sm:text-base">{idx + 1} / {flashcards.length}</span>

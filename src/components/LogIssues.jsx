@@ -43,15 +43,16 @@ export default function LogIssues({ flashcards, setFlashcards }) {
             />
             <textarea
               required
-              className="w-full rounded-xl bg-white dark:bg-gray-800 p-2 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 h-20 sm:h-24 placeholder-gray-500 dark:placeholder-gray-400 text-sm sm:text-base"
+              className="w-full rounded-xl bg-white dark:bg-gray-800 p-2 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 h-20 sm:h-24 placeholder-gray-500 dark:placeholder-gray-400 text-sm sm:text-base resize-y"
               placeholder="The Tricky Question..."
               value={form.question}
               onChange={e => setForm({...form, question: e.target.value})}
             />
             <textarea
               required
-              className="w-full rounded-xl bg-white dark:bg-gray-800 p-2 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 h-20 sm:h-24 placeholder-gray-500 dark:placeholder-gray-400 text-sm sm:text-base"
-              placeholder="Correct Answer..."
+              rows="6"
+              className="w-full rounded-xl bg-white dark:bg-gray-800 p-2 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 dark:placeholder-gray-400 text-sm sm:text-base resize-y"
+              placeholder="Correct Answer... (Use Enter for new lines)"
               value={form.answer}
               onChange={e => setForm({...form, answer: e.target.value})}
             />
@@ -91,7 +92,9 @@ export default function LogIssues({ flashcards, setFlashcards }) {
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-2 text-sm sm:text-base pr-12">{q.question}</h4>
                   <div className="bg-white dark:bg-gray-800 p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300">
                     <span className="font-bold text-green-600 dark:text-green-400 block mb-1">Answer:</span>
-                    {q.answer}
+                    <div className="whitespace-pre-wrap leading-relaxed">
+                      {q.answer}
+                    </div>
                   </div>
                 </div>
               ))}

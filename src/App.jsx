@@ -78,10 +78,27 @@ export default function App() {
     { name: 'In Progress', value: roadmap.filter(r => r.status === 'In Progress').length },
     { name: 'Not Started', value: roadmap.filter(r => r.status === 'Not Started').length },
   ];
+  
+  const totalTopics = roadmap.length;
+  const mastered = progress[0].value;
+  const percent = totalTopics ? (mastered / totalTopics) * 100 : 0;
+
   const badges = [
-    { name: 'Cloud Rookie', unlocked: progress[0].value > 0 },
-    { name: 'Halfway There', unlocked: roadmap.length && progress[0].value / roadmap.length >= 0.5 },
-    { name: 'Exam Ready', unlocked: roadmap.length && progress[0].value === roadmap.length },
+    { 
+      name: 'Cloud Rookie', 
+      unlocked: mastered >= 5,
+      description: 'Complete your first 5 topics'
+    },
+    { 
+      name: 'Halfway There', 
+      unlocked: percent >= 50,
+      description: 'Reach 50% course completion'
+    },
+    { 
+      name: 'Exam Ready', 
+      unlocked: percent >= 100,
+      description: 'Master all topics'
+    },
   ];
 
   // Settings/global state for backup/import/reset
@@ -96,9 +113,9 @@ export default function App() {
     if (window.confirm("Are you sure? This will delete all progress.")) {
       setExamDate(defaultExamDate);
       setDomains(initialDomains);
-        setRoadmap(initialRoadmap);
+      setRoadmap(initialRoadmap);
       setFlashcards([]);
-        localStorage.clear();
+      localStorage.clear();
     }
   };
 
@@ -107,16 +124,16 @@ export default function App() {
       <Header examDate={examDate} setExamDate={setExamDate} daysLeft={daysLeft} theme={theme} setTheme={setTheme} />
       <nav className="flex justify-center gap-1 sm:gap-2 mb-6 sm:mb-8 mt-3 sm:mt-4 flex-wrap px-2 overflow-x-auto">
         {TABS.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl font-semibold transition shadow text-xs sm:text-sm md:text-base whitespace-nowrap ${activeTab === tab.id ? "bg-indigo-700 dark:bg-indigo-600 text-white" : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
           >
             <tab.icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-              <span className="hidden sm:inline">{tab.label}</span>
-              <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
-            </button>
-          ))}
+            <span className="hidden sm:inline">{tab.label}</span>
+            <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+          </button>
+        ))}
       </nav>
       <main className="max-w-7xl mx-auto px-2 sm:px-4 pb-8 sm:pb-16">
         {activeTab === 'dashboard' && <Dashboard progress={progress} domainStats={domainStats} badges={badges} roadmap={roadmap} flashcards={flashcards} domains={domains} />}
@@ -125,6 +142,13 @@ export default function App() {
         {activeTab === 'difficult' && <LogIssues flashcards={flashcards} setFlashcards={setFlashcards} />}
         {activeTab === 'settings' && <Settings state={settingsState} setState={setSettingsState} reset={reset} />}
       </main>
+      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 mt-8">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            © 2025 Gaurav Vengurlekar | All rights reserved
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -297,25 +297,57 @@ export default function Dashboard({ progress, domainStats, badges, roadmap, flas
           {badges.map(badge => (
             <div 
               key={badge.name} 
-              className={`p-4 rounded-xl border-2 transition-all ${
+              className={`p-4 sm:p-5 rounded-xl border-2 transition-all duration-300 ${
                 badge.unlocked 
-                  ? 'bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/50 dark:to-indigo-800/50 border-indigo-300 dark:border-indigo-700 shadow-md' 
-                  : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 opacity-60'
+                  ? 'bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 dark:from-yellow-900/30 dark:via-amber-900/30 dark:to-yellow-800/30 border-yellow-400 dark:border-yellow-600 shadow-lg transform hover:scale-105' 
+                  : 'bg-gray-50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 opacity-60'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-full ${badge.unlocked ? 'bg-indigo-500 dark:bg-indigo-600' : 'bg-gray-300 dark:bg-gray-600'}`}>
-                  <Award className={`w-5 h-5 sm:w-6 sm:h-6 ${badge.unlocked ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
+              <div className="flex items-start gap-3">
+                <div className={`p-2.5 sm:p-3 rounded-full transition-all ${
+                  badge.unlocked 
+                    ? 'bg-gradient-to-br from-yellow-400 to-amber-500 dark:from-yellow-500 dark:to-amber-600 shadow-md' 
+                    : 'bg-gray-300 dark:bg-gray-600'
+                }`}>
+                  <Award className={`w-6 h-6 sm:w-7 sm:h-7 ${
+                    badge.unlocked 
+                      ? 'text-white' 
+                      : 'text-gray-500 dark:text-gray-400'
+                  }`} />
                 </div>
                 <div className="flex-1">
-                  <h4 className={`font-bold text-sm sm:text-base ${badge.unlocked ? 'text-indigo-900 dark:text-indigo-200' : 'text-gray-500 dark:text-gray-400'}`}>
+                  <h4 className={`font-bold text-sm sm:text-base mb-1 ${
+                    badge.unlocked 
+                      ? 'text-yellow-900 dark:text-yellow-200' 
+                      : 'text-gray-500 dark:text-gray-400'
+                  }`}>
                     {badge.name}
                   </h4>
-                  <p className={`text-xs sm:text-sm mt-1 ${badge.unlocked ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-400 dark:text-gray-500'}`}>
-                    {badge.unlocked ? '✓ Unlocked' : 'Locked'}
+                  {badge.description && (
+                    <p className={`text-xs mb-2 ${
+                      badge.unlocked 
+                        ? 'text-yellow-700 dark:text-yellow-300' 
+                        : 'text-gray-400 dark:text-gray-500'
+                    }`}>
+                      {badge.description}
+                    </p>
+                  )}
+                  <p className={`text-xs sm:text-sm font-semibold ${
+                    badge.unlocked 
+                      ? 'text-green-600 dark:text-green-400' 
+                      : 'text-gray-400 dark:text-gray-500'
+                  }`}>
+                    {badge.unlocked ? '✓ Unlocked' : '🔒 Locked'}
                   </p>
                 </div>
               </div>
+              {badge.unlocked && (
+                <div className="mt-3 pt-3 border-t border-yellow-300 dark:border-yellow-700">
+                  <p className="text-xs text-yellow-800 dark:text-yellow-300 font-medium">
+                    🎉 Achievement Earned!
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>
