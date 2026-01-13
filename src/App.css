@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.mb-safe { margin-bottom: env(safe-area-inset-bottom); }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
