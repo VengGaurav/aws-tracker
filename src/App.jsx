@@ -207,7 +207,7 @@ export default function App() {
         {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Welcome back,</p>
+        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Welcome</p>
         <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">
           {user.displayName || user.email.split('@')[0]}
         </p>
