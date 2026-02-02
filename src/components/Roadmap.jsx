@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Search, Pencil, Plus, Trash2 } from "lucide-react";
 import EditRoadmapRow from "./EditRoadmapRow";
+import { useAlert } from "../context/AlertContext";
 
 export default function Roadmap({ topics, setTopics, domains, setDomains }) {
+  const { showConfirm } = useAlert();
   const [search, setSearch] = useState("");
   const [domain, setDomain] = useState("");
   const [editIdx, setEditIdx] = useState(null);
@@ -46,8 +48,13 @@ export default function Roadmap({ topics, setTopics, domains, setDomains }) {
   };
 
   // Delete topic
-  const handleDelete = (idx) => {
-    if (window.confirm('Delete this topic?')) {
+  const handleDelete = async (idx) => {
+    const confirmed = await showConfirm('Delete this topic?', {
+      title: 'Delete Topic',
+      confirmLabel: 'Yes, delete',
+      type: 'error',
+    });
+    if (confirmed) {
       setTopics(topics.filter((_, i) => i !== idx));
       if (editIdx === idx) setEditIdx(null);
     }
@@ -62,8 +69,12 @@ export default function Roadmap({ topics, setTopics, domains, setDomains }) {
   };
 
   // Delete domain
-  const handleDeleteDomain = (domainToDelete) => {
-    if (window.confirm(`Delete domain "${domainToDelete}"? Topics in this domain will be moved to the first domain.`)) {
+  const handleDeleteDomain = async (domainToDelete) => {
+    const confirmed = await showConfirm(
+      `Delete domain "${domainToDelete}"? Topics in this domain will be moved to the first domain.`,
+      { title: 'Delete Domain', confirmLabel: 'Yes, delete', type: 'error' }
+    );
+    if (confirmed) {
       const firstDomain = domains[0];
       setTopics(topics.map(t => t.domain === domainToDelete ? { ...t, domain: firstDomain } : t));
       setDomains(domains.filter(d => d !== domainToDelete));

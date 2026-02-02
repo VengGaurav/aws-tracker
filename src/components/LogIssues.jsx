@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import EditFlashcardModal from "./EditFlashcardModal";
+import { useAlert } from "../context/AlertContext";
 
 export default function LogIssues({ flashcards, setFlashcards }) {
+  const { showConfirm } = useAlert();
   const [form, setForm] = useState({ topic: "", question: "", answer: "" });
   const [editIdx, setEditIdx] = useState(null);
 
@@ -13,8 +15,13 @@ export default function LogIssues({ flashcards, setFlashcards }) {
     setForm({ topic: "", question: "", answer: "" });
   };
 
-  const deleteQuestion = (id) => {
-    if (window.confirm('Delete this question?')) {
+  const deleteQuestion = async (id) => {
+    const confirmed = await showConfirm('Delete this question?', {
+      title: 'Delete Question',
+      confirmLabel: 'Yes, delete',
+      type: 'error',
+    });
+    if (confirmed) {
       setFlashcards(flashcards.filter(q => q.id !== id));
       if (editIdx !== null && flashcards[editIdx]?.id === id) setEditIdx(null);
     }

@@ -20,9 +20,9 @@ export default function Settings({ state, setState, reset }) {
         try {
           const data = JSON.parse(event.target.result);
           setState(data);
-          alert('Data imported successfully!');
+          showAlert('Data imported successfully!', 'success', 'Import Complete');
         } catch (err) {
-          alert('Error importing data. Please check the file.');
+          showAlert('Error importing data. Please check the file.', 'error', 'Import Failed');
         }
       };
       reader.readAsText(file);

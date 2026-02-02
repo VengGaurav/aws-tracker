@@ -10,6 +10,7 @@ import Flashcards from './components/Flashcards';
 import LogIssues from './components/LogIssues';
 import Settings from './components/Settings';
 import Header from './components/Header';
+import { useAlert } from './context/AlertContext';
 
 const TABS = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart2 },
@@ -28,6 +29,7 @@ const initialRoadmap = [
 const defaultExamDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
 export default function App() {
+  const { showConfirm } = useAlert();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -112,7 +114,11 @@ export default function App() {
 
   // Logout
   const handleLogout = async () => {
-    if (window.confirm('Are you sure you want to logout?')) {
+    const confirmed = await showConfirm('Are you sure you want to logout?', {
+      title: 'Logout',
+      confirmLabel: 'Yes, logout',
+    });
+    if (confirmed) {
       await signOut(auth);
       setUser(null);
     }
@@ -167,8 +173,13 @@ export default function App() {
     setFlashcards(Array.isArray(newState.flashcards) ? newState.flashcards : []);
   };
   
-  const reset = () => {
-    if (window.confirm("Are you sure? This will delete all progress.")) {
+  const reset = async () => {
+    const confirmed = await showConfirm("Are you sure? This will delete all progress.", {
+      title: 'Reset All Data',
+      confirmLabel: 'Yes, reset everything',
+      type: 'error',
+    });
+    if (confirmed) {
       setExamDate(defaultExamDate);
       setDomains(initialDomains);
       setRoadmap(initialRoadmap);
